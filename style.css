@@ -39,12 +39,15 @@ h1 .x, h1 .o { font-weight: 900; margin-right: 2px; }
 .vs { color: var(--mute); }
 
 /* 棋盤 */
-.board { --size: min(94vw, calc(100vh - 230px), 640px); width: var(--size); height: var(--size); display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: repeat(3, minmax(0, 1fr)); gap: calc(var(--size) * .022); padding: calc(var(--size) * .018); background: var(--line); border-radius: 14px; position: relative; touch-action: manipulation; }
-.sub { position: relative; min-width: 0; min-height: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); grid-template-rows: repeat(3, minmax(0, 1fr)); gap: 3px; padding: 4px; background: var(--panel); border-radius: 8px; transition: box-shadow .2s, background .2s, opacity .2s; }
+.board { --size: min(94vw, calc(100vh - 230px), 640px); --pad: calc(var(--size) * .018); --gap: calc(var(--size) * .022);
+  --sub: calc((var(--size) - 2 * var(--pad) - 2 * var(--gap)) / 3); --cell: calc((var(--sub) - 8px - 6px) / 3);   /* 每一格都是算好的固定尺寸,下了 X / O 也不會變 */
+  width: var(--size); height: var(--size); display: grid; grid-template-columns: repeat(3, var(--sub)); grid-template-rows: repeat(3, var(--sub)); gap: var(--gap); padding: var(--pad); background: var(--line); border-radius: 14px; position: relative; touch-action: manipulation; }
+@supports (height: 100svh) { .board { --size: min(94vw, calc(100svh - 230px), 640px); } }
+.sub { position: relative; width: var(--sub); height: var(--sub); display: grid; grid-template-columns: repeat(3, var(--cell)); grid-template-rows: repeat(3, var(--cell)); gap: 3px; padding: 4px; background: var(--panel); border-radius: 8px; overflow: hidden; transition: box-shadow .2s, background .2s, opacity .2s; }
 .sub.active { background: #2b3040; box-shadow: 0 0 0 2px var(--glow), 0 0 18px rgba(255, 209, 102, .35); }
 .board.waiting .sub.active { box-shadow: 0 0 0 2px rgba(255, 209, 102, .35); }
 .sub.done .cell { opacity: .28; }
-.cell { min-width: 0; min-height: 0; overflow: hidden; padding: 0; border: none; border-radius: 5px; background: var(--panel2); display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: calc(var(--size) * .062); line-height: 1; cursor: pointer; }
+.cell { width: var(--cell); height: var(--cell); min-width: 0; min-height: 0; overflow: hidden; padding: 0; margin: 0; border: none; border-radius: 5px; background: var(--panel2); display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: calc(var(--cell) * .6); line-height: 1; cursor: pointer; -webkit-appearance: none; appearance: none; }
 .cell.x::after { content: "X"; color: var(--x); }
 .cell.o::after { content: "O"; color: var(--o); }
 .cell.last { box-shadow: inset 0 0 0 2px var(--glow); }
