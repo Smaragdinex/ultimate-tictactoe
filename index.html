@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="theme-color" content="#14171f">
+<title>超級井字棋 Ultimate Tic-Tac-Toe</title>
+<meta name="description" content="九宮格裡的九宮格:超級井字棋。可以跟電腦(蒙地卡羅樹搜尋 AI)對戰、同一支手機兩人輪流下,或用房間號線上對戰。">
+<link rel="stylesheet" href="style.css">
+<script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcode-generator@1.4.4/qrcode.min.js"></script>
+</head>
+<body>
+<main id="app">
+
+  <!-- 首頁 -->
+  <section id="home" class="screen active">
+    <h1><span class="x">X</span><span class="o">O</span> 超級井字棋</h1>
+    <p class="tag">Ultimate Tic-Tac-Toe · 九宮格裡的九宮格</p>
+    <div class="menu">
+      <div class="card">
+        <h2>跟電腦玩</h2>
+        <div class="seg" id="diff">
+          <button data-v="easy">簡單</button><button data-v="normal" class="on">普通</button><button data-v="hard">困難</button>
+        </div>
+        <div class="seg" id="side">
+          <button data-v="1" class="on">我先(X)</button><button data-v="2">電腦先</button>
+        </div>
+        <button class="primary" id="btnAI">開始</button>
+      </div>
+      <div class="card">
+        <h2>線上對戰</h2>
+        <button class="primary" id="btnHost">建立房間</button>
+        <div class="join">
+          <input id="joinCode" maxlength="4" placeholder="房間號" autocomplete="off" autocapitalize="characters" spellcheck="false">
+          <button id="btnJoin">加入</button>
+        </div>
+      </div>
+      <div class="card">
+        <h2>兩人同一支手機</h2>
+        <button class="primary" id="btnLocal">開始</button>
+      </div>
+      <button class="link" id="btnRules">規則說明</button>
+    </div>
+  </section>
+
+  <!-- 等對手 -->
+  <section id="lobby" class="screen">
+    <h2>房間號</h2>
+    <div id="roomCode" class="code">····</div>
+    <div id="qr" class="qr"></div>
+    <p class="hint">請對手用手機掃 QR code,或在首頁輸入房間號</p>
+    <button id="btnCopy">複製邀請連結</button>
+    <p id="lobbyStatus" class="status">正在建立房間…</p>
+    <button class="link" id="btnLobbyBack">取消</button>
+  </section>
+
+  <!-- 遊戲 -->
+  <section id="game" class="screen">
+    <div class="topbar">
+      <button class="icon" id="btnBack" aria-label="回首頁">‹</button>
+      <div class="players">
+        <span id="pX" class="pl"><b class="x">X</b> <span id="nameX">玩家</span></span>
+        <span class="vs">vs</span>
+        <span id="pO" class="pl"><b class="o">O</b> <span id="nameO">玩家</span></span>
+      </div>
+      <button class="icon" id="btnHelp" aria-label="規則">?</button>
+    </div>
+    <div id="status" class="status big">X 先下</div>
+    <div id="board" class="board" aria-label="棋盤"></div>
+    <div class="bottombar">
+      <button id="btnUndo">悔棋</button>
+      <button id="btnRestart">再來一局</button>
+    </div>
+    <p id="aiInfo" class="ai-info"></p>
+  </section>
+
+  <!-- 規則 -->
+  <dialog id="rules">
+    <h2>規則</h2>
+    <ol>
+      <li>大棋盤有 9 個小棋盤,每個小棋盤都是一盤井字棋(OOXX)。</li>
+      <li><b>你下在小棋盤的哪一格,對手下一手就要去大棋盤的同一個位置。</b>例如你下在某個小棋盤的右上角,對手就要下在右上角那個小棋盤(會發亮)。</li>
+      <li>在小棋盤連成一線,就贏下那個小棋盤。</li>
+      <li>如果被送去的小棋盤已經分出勝負或下滿,可以下在任何還能下的小棋盤。</li>
+      <li>在大棋盤贏下三個連成一線的小棋盤,就贏了;都下完還沒有人連線就是和局。</li>
+    </ol>
+    <p class="muted">電腦用的是蒙地卡羅樹搜尋(MCTS):每一步隨機模擬幾千盤,選勝率最高的下法。困難模式每步想 2 秒。</p>
+    <form method="dialog"><button class="primary">知道了</button></form>
+  </dialog>
+
+  <div id="toast" class="toast"></div>
+</main>
+<script type="module" src="js/main.js"></script>
+</body>
+</html>
